@@ -1,5 +1,5 @@
 /*!
- * jquery.fixer.js 0.0.3 - https://github.com/yckart/jquery.fixer.js
+ * jquery.fixer.js 1.0.0 - https://github.com/yckart/jquery.fixer.js
  * Fix elements as `position:sticky` do.
  *
  *
@@ -30,7 +30,6 @@
 		}
 		return false;
 	}
-
 
 	function processElements(eventScroll){
 		if($elementsQueue.length){
@@ -73,7 +72,79 @@
 		}
 	}
 
+	function removeFromQueue(){
+		var $this = $(this),
+			indexQueue = $this.index($elementsQueue),
+			options = $this.data('fixer');
+		if(indexQueue > -1){
+			$this.removeData('fixer');
+			$elementsQueue.splice(indexQueue,1);
+
+			if(!!options.originalStyle){
+				$this.attr('style', options.originalStyle);
+			}else{
+				$this.removeAttr('style');
+			}
+		}
+	}
+
+	$.fn.fixerDestroy = function() {
+		this.each(function(i,e) {
+			removeFromQueue.call(e);
 		});
 	};
 
+	$.fn.fixer = function(newOptions) {
+		var winEventsScroll = (($._data(window,'events') || {}).scroll || []),
+			options = {};
+
+		options = $.extend({}, defaults, (jQuery.isPlainObject(newOptions) ? newOptions : {}));
+		options.cssPos = (!!options.horizontal ? 'left' : 'top');
+
+		this.each(function(i,e) {
+			var $this = $(e),
+				indexQueue = $this.index($elementsQueue),
+				data = ($this.data('fixer') || {});
+
+			if('string' === typeof newOptions){
+				if(indexQueue > -1){
+					switch(newOptions){
+					case 'pause':
+						data.pause = true;
+						$this.data('fixer', data);
+						break;
+					case 'resume':
+						data.pause = false;
+						$this.data('fixer', data);
+						break;
+					case 'destroy':
+						removeFromQueue.call(e);
+						break;
+					}
+				}
+			}else{
+				if(indexQueue > -1){
+					$elementsQueue.splice(indexQueue,1);
+				}
+				$this.data('fixer', options);
+				$elementsQueue = $elementsQueue.add($this);
+			}
+		});
+
+		if(!eventIsTrigged){
+			if(!!winEventsScroll.length){
+				for (var i = winEventsScroll.length - 1; i >= 0; i--) {
+					if(winEventsScroll[i].namespace === 'fixer'){
+						eventIsTrigged = true;
+					}
+				};
+			}
+			if(!eventIsTrigged){
+				eventIsTrigged = true;
+				$win.on('scroll.fixer', function(event) {
+					processElements(event);
+				}).resize();
+			}
+		}
+	};
 }(jQuery, this));
