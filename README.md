@@ -4,8 +4,49 @@ Take a look at the [demo](http://yckart.github.io/jquery.fixer.js/).
 
 [![QR](http://chart.apis.google.com/chart?cht=qr&chs=240x240&chl=http://yckart.github.io/jquery.fixer.js/)](http://yckart.github.io/jquery.fixer.js/)
 
-#No documentation yet!
-(feel free to write a bit about it)
+##  Documentation
+
+Simple trigger:
+```
+$('.selector').fixer();
+```
+With options:
+```
+$('.selector').fixer({gap: 10});
+```
+
+| Options        |      Description      |      Possible Values      | Default  |
+| -------------- |:-------------------------:|:-------------------------:| -------:|
+| gap | | | |
+| horizontal | | | |
+| isFixed | | | |
+| useOnlyMargins | | | |
+| pause | | | |
+
+### Disabling
+
+Disabling itens (after `element` created with `.fixer()`):
+```
+$('.selector').fixer('pause');
+```
+...  and resume:
+```
+$('.selector').fixer('resume');
+```
+### Destroy
+
+Removing Fixer from elements
+```
+$('.selector').fixer('destroy');
+```
+... or
+```
+$('.selector').fixerDestroy();
+```
+Destroy all fixer:
+```
+$(window).off('scroll.fixer');
+```
 
 ## Download
  Get the [raw](https://raw.github.com/yckart/jquery.fixer.js/master/jquery.fixer.js) script, download the complete [package](https://github.com/yckart/jquery.fixer.js/zipball/master) or fork it on [GitHub](https://github.com/yckart/jquery.fixer.js/).

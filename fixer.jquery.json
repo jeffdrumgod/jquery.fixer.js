@@ -11,12 +11,17 @@
         "position",
         "scroll"
     ],
-    "version": "0.0.3",
+    "version": "1.0.0",
     "author": {
         "name": "Yannick Albert",
         "email": "mail@yckart.com",
         "url": "https://github.com/yckart"
     },
+    "contributors": [{
+        "name": "Jefferson Rafael Kozerski",
+        "email": "jeff.drumgod@gmail.com",
+        "url": "https://github.com/jeffdrumgod"
+    }],
     "licenses": [{
         "type": "MIT",
         "url": "http://yckart.com/mit/"
