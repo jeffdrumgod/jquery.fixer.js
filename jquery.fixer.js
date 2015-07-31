@@ -143,7 +143,7 @@
 				eventIsTrigged = true;
 				$win.on('scroll.fixer', function(event) {
 					processElements(event);
-				}).resize();
+				}).scroll();
 			}
 		}
 	};
