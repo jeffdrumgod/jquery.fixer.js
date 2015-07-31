@@ -54,40 +54,59 @@
 	function processElements(eventScroll){
 		if($elementsQueue.length){
 			for (var i = $elementsQueue.length - 1; i >= 0; i--) {
-				processFixerElement.call(
-					$elementsQueue[i]
-				);
+				debounce(
+					processFixerElement.bind(
+						$elementsQueue[i],
+						eventScroll
+					),
+					300
+				)();
 			};
 		}
 	}
 
-	function processFixerElement(){
+	function processFixerElement(eventScroll){
 		var style = this.style,
 			$this = $(this),
 			options = $this.data('fixer'),
-			$parent, scrollPos, elemSize, parentPos, parentSize;
+			$parent, scrollPos, elemSize, parentPos, parentSize, maxEnd, isMaxEnd, changeWithSroll;
 
 		if(!options.pause){
-			if (supportSticky(this)) {
-				style[cssPos] = options.gap + 'px';
+			if (featureTest( 'position', 'sticky' ) && !options.useOnlyMargins) {
+				style[options.cssPos] = options.gap + 'px';
 				return;
 			}
 			$parent = $this.parent();
 			scrollPos = $win[!!options.horizontal ? 'scrollLeft' : 'scrollTop']();
 			elemSize = $this[!!options.horizontal ? 'outerWidth' : 'outerHeight']();
-			parentPos = $parent.offset()[options.cssPos];
+			parentPos = $parent.offset()[options.cssPos.replace('margin-', '')];
 			parentSize = $parent[!!options.horizontal ? 'outerWidth' : 'outerHeight']();
+			maxEnd = (parentSize + parentPos - options.gap);
+			isMaxEnd = maxEnd >= (scrollPos + elemSize);
+			changeWithSroll = scrollPos >= parentPos - options.gap;
 
-			if (scrollPos >= parentPos - options.gap && (parentSize + parentPos - options.gap) >= (scrollPos + elemSize)) {
-				style.position = 'fixed';
-				style[options.cssPos] = options.gap + 'px';
-				options.isFixed();
-			} else if (scrollPos < parentPos) {
-				style.position = 'absolute';
-				style[options.cssPos] = 0;
-			} else {
-				style.position = 'absolute';
-				style[options.cssPos] = parentSize - elemSize + 'px';
+			if(!!options.useOnlyMargins){
+				if (changeWithSroll && isMaxEnd) {
+					style[options.cssPos] = ((scrollPos - parentPos) + options.gap) + 'px';
+				}else{
+					if(scrollPos < parentPos){
+						style.cssText = '';
+					}else{
+						style[options.cssPos] = (parentSize - elemSize) + 'px';
+					}
+				}
+			}else{
+				if (changeWithSroll && isMaxEnd) {
+					style.position = 'fixed';
+					style[options.cssPos] = options.gap + 'px';
+					options.isFixed();
+				} else if (scrollPos < parentPos) {
+					style.position = 'absolute';
+					style[options.cssPos] = 0;
+				} else {
+					style.position = 'absolute';
+					style[options.cssPos] = parentSize - elemSize + 'px';
+				}
 			}
 		}
 	}
@@ -119,7 +138,7 @@
 			options = {};
 
 		options = $.extend({}, defaults, (jQuery.isPlainObject(newOptions) ? newOptions : {}));
-		options.cssPos = (!!options.horizontal ? 'left' : 'top');
+		options.cssPos = (!!options.useOnlyMargins ? 'margin-' : '') + (!!options.horizontal ? 'left' : 'top');
 
 		this.each(function(i,e) {
 			var $this = $(e),
