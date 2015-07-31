@@ -26,6 +26,10 @@
 		return false;
 	};
 
+	$.fn.fixerDestroy = function() {
+		$win.off('scroll.fixer');
+	};
+
 	$.fn.fixer = function(options) {
 		options = $.extend(options, defaults);
 		var hori = options.horizontal,
