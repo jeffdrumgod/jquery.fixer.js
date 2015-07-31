@@ -41,7 +41,7 @@
 				return;
 			}
 
-			$win.on('scroll', function() {
+			$win.on('scroll.fixer', function() {
 				var scrollPos = $win[hori ? 'scrollLeft' : 'scrollTop'](),
 					elemSize = $this[hori ? 'outerWidth' : 'outerHeight'](),
 					parentPos = $parent.offset()[cssPos],
