@@ -22,6 +22,7 @@ $('.selector').fixer({gap: 10});
 | isFixed | | | |
 | useOnlyMargins | | | |
 | pause | | | |
+| applyOnlyVisible | | | |
 
 ### Disabling
 

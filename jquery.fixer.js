@@ -71,7 +71,7 @@
 			options = $this.data('fixer'),
 			$parent, scrollPos, elemSize, parentPos, parentSize, maxEnd, isMaxEnd, changeWithSroll;
 
-		if(!options.pause){
+		if(!options.pause && (!options.applyOnlyVisible || (!!options.applyOnlyVisible && $this.is(':visible')))){
 			if (featureTest( 'position', 'sticky' ) && !options.useOnlyMargins) {
 				style[options.cssPos] = options.gap + 'px';
 				return;
