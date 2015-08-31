@@ -79,7 +79,7 @@
 			$parent = $this.parent();
 			scrollPos = $win[!!options.horizontal ? 'scrollLeft' : 'scrollTop']();
 			elemSize = $this[!!options.horizontal ? 'outerWidth' : 'outerHeight']();
-			parentPos = $parent.offset()[options.cssPos.replace('margin-', '')];
+			parentPos = ($parent.offset() || {})[options.cssPos.replace('margin-', '')] || 0;
 			parentSize = $parent[!!options.horizontal ? 'outerWidth' : 'outerHeight']();
 			maxEnd = (parentSize + parentPos - options.gap);
 			isMaxEnd = maxEnd >= (scrollPos + elemSize);
